@@ -10,6 +10,7 @@ import DocsCallout from '@/components/DocsCallout'
 import DocsExample from '@/components/DocsExample'
 import MintingInfo from '@/components/MintingInfo'
 import MintingInfoDetail from '@/components/MintingInfoDetail'
+import MintingData from '@/components/MintingData'
 import Test from '@/components/Test.vue'
 
 import Datepicker from 'vue3-date-time-picker'
@@ -26,6 +27,7 @@ app.component('DocsExample', DocsExample)
 app.component('Datepicker', Datepicker)
 app.component('MintingInfo', MintingInfo)
 app.component('MintingInfoDetail', MintingInfoDetail)
+app.component('MintingData', MintingData)
 app.component('Test', Test)
 
 app.mount('#app')

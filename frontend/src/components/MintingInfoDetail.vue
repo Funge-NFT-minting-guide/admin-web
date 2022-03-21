@@ -5,7 +5,7 @@
       <option>WL</option>
     </CFormSelect>
     <CInputGroupText>Time</CInputGroupText>
-    <Datepicker v-model="time" timePicker />
+    <Datepicker timePicker />
     <CInputGroupText>Price</CInputGroupText>
     <CFormInput />
     <CFormSelect>
@@ -13,7 +13,7 @@
       <option>ETH</option>
     </CFormSelect>
     <CInputGroupText>Amount</CInputGroupText>
-    <CFormInput v-bind:value="mintingAmount" />
+    <CFormInput :value="mintingAmount" />
     <CButton color="secondary" variant="outline">Add</CButton>
   </CInputGroup>
 </template>
