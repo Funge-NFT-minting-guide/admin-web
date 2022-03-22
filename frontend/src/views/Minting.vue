@@ -67,11 +67,24 @@
               </CCol>
             </CRow>
             <br />
-            <CTable align="middle" class="mb-0 border" hover responsive>
+            <CTable
+              align="middle"
+              class="mb-0 border"
+              style="width: 100%"
+              hover
+              responsive
+            >
               <CTableBody>
-                <CTableRow>
-                  <MintingData />
-                  <MintingInfo />
+                <CTableRow v-for="minting in mintingData" :key="minting.id">
+                  <MintingData
+                    :profileImageUrl="minting.profile_image_url"
+                    :projectName="minting.user"
+                    :tweetText="minting.text"
+                  />
+                  <MintingInfo
+                    :tweetId="minting.id"
+                    :projectName="minting.user"
+                  />
                 </CTableRow>
               </CTableBody>
             </CTable>
@@ -79,13 +92,24 @@
         </CCard>
       </CCol>
     </CRow>
-    <Test />
   </div>
 </template>
 
 <script>
+import { getMintingTweets } from '@/api/minting'
+
 export default {
   name: 'Minting',
+  data() {
+    return {
+      mintingData: [],
+    }
+  },
+
+  created() {
+    getMintingTweets().then((response) => (this.mintingData = response.data))
+  },
+
   setup() {
     const progressData = [{ title: 'Processing', icon: 'cilCheck', value: 53 }]
 

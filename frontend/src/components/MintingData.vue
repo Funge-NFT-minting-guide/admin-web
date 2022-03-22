@@ -5,14 +5,14 @@
   <CTableDataCell>
     <CAvatar size="xl" :src="profileImageUrl" />
   </CTableDataCell>
-  <CTableDataCell>
+  <CTableDataCell class="col-4">
     <CInputGroup class="flex-nowrap">
       <CInputGroupText id="addon-wrapping">@</CInputGroupText>
       <CFormInput :value="projectName" aria-label="Username" disabled />
     </CInputGroup>
     <CInputGroup class="flex-nowrap">
       <CInputGroupText>Origin</CInputGroupText>
-      <CFormTextarea disabled></CFormTextarea>
+      <CFormTextarea :value="tweetText" disabled></CFormTextarea>
     </CInputGroup>
   </CTableDataCell>
   <CTableDataCell>
@@ -27,7 +27,7 @@
 
 <script>
 export default {
-  name: 'MintingDataInfo',
+  name: 'MintingData',
   props: {
     profileImageUrl: {
       type: String,

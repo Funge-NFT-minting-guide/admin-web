@@ -5,13 +5,17 @@
         <CTableDataCell>
           <CInputGroup class="flex-nowrap">
             <CInputGroupText id="addon-wrapping">@</CInputGroupText>
-            <CFormInput placeholder="MetaKongz" aria-label="Username" />
+            <CFormInput :value="projectName" aria-label="Username" />
           </CInputGroup>
           <CInputGroup class="flex-nowrap">
             <CInputGroupText>Date</CInputGroupText>
             <Datepicker :enableTimePicker="false" />
           </CInputGroup>
-          <MintingInfoDetail minting-amount="112" />
+          <MintingInfoDetail />
+          <CInputGroup class="flex-nowrap">
+            <CInputGroupText id="addon-wrapping">Site</CInputGroupText>
+            <CFormInput />
+          </CInputGroup>
           <CInputGroup class="flex-nowrap">
             <CInputGroupText>ETC.</CInputGroupText>
             <CFormInput />
@@ -28,14 +32,19 @@
 </template>
 
 <script>
-import { cilClone } from '@coreui/icons'
 export default {
   name: 'MintingInfo',
-  setup() {
-    return {
-      message: 'test',
-      cilClone,
-    }
+  props: {
+    tweetId: {
+      type: String,
+      default: undefined,
+      required: false,
+    },
+    projectName: {
+      type: String,
+      default: undefined,
+      required: false,
+    },
   },
 }
 </script>

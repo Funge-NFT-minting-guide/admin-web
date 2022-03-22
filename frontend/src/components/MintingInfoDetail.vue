@@ -4,16 +4,19 @@
       <option>Public</option>
       <option>WL</option>
     </CFormSelect>
-    <CInputGroupText>Time</CInputGroupText>
-    <Datepicker timePicker />
-    <CInputGroupText>Price</CInputGroupText>
-    <CFormInput />
+    <Datepicker class="date-picker" timePicker />
+    <CFormFloating>
+      <CFormInput id="priceInput" />
+      <CFormLabel for="priceInput">Price</CFormLabel>
+    </CFormFloating>
     <CFormSelect>
       <option>KLAY</option>
       <option>ETH</option>
     </CFormSelect>
-    <CInputGroupText>Amount</CInputGroupText>
-    <CFormInput :value="mintingAmount" />
+    <CFormFloating>
+      <CFormInput id="amountInput" :value="mintingAmount" />
+      <CFormLabel for="amountInput">Amount</CFormLabel>
+    </CFormFloating>
     <CButton color="secondary" variant="outline">Add</CButton>
   </CInputGroup>
 </template>

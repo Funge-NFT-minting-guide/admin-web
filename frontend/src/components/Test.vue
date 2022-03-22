@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import http from './api'
+import { getMintingTweets } from '@/api/minting'
 
 export default {
   name: 'Test',
@@ -15,8 +15,7 @@ export default {
   },
 
   created() {
-    http
-      .get('/minting')
+    getMintingTweets()
       .then((response) => (this.test = response.data))
       .catch((error) => {
         console.log(error)
