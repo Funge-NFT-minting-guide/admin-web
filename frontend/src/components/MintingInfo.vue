@@ -9,9 +9,20 @@
           </CInputGroup>
           <CInputGroup class="flex-nowrap">
             <CInputGroupText>Date</CInputGroupText>
-            <Datepicker :enableTimePicker="false" />
+            <Datepicker v-model="mintingDate" :enableTimePicker="false" />
           </CInputGroup>
-          <MintingInfoDetail />
+          <!--<MintingInfoDetail />-->
+          <component
+            v-for="detail in infoDetail"
+            :key="detail"
+            :is="detail.comp"
+            :mintingType="detail.mintingType"
+            :mintingTime="detail.mintingTime"
+            :mintingPrice="detail.mintingPrice"
+            :mintingCurrency="detail.mintingCurrency"
+            :mintingAmount="detail.mintingAmount"
+            @requestAddInfoDetail="addInfoDetail"
+          />
           <CInputGroup class="flex-nowrap">
             <CInputGroupText id="addon-wrapping">Site</CInputGroupText>
             <CFormInput />
@@ -24,7 +35,9 @@
         <CTableDataCell>
           <CButton color="success" shape="rounded-pill">Add</CButton>
           <br /><br />
-          <CButton color="info" shape="rounded-pill">Save</CButton>
+          <CButton color="info" shape="rounded-pill" @click="test">
+            Save
+          </CButton>
         </CTableDataCell>
       </CTableRow>
     </CTableBody>
@@ -32,6 +45,8 @@
 </template>
 
 <script>
+import { ref } from 'vue'
+
 export default {
   name: 'MintingInfo',
   props: {
@@ -45,6 +60,42 @@ export default {
       default: undefined,
       required: false,
     },
+  },
+  data() {
+    return {
+      infoDetail: [
+        {
+          comp: 'MintingInfoDetail',
+          mintingType: 'Public',
+          mintingTime: false,
+          mintingPrice: null,
+          mintingCurrency: 'KLAY',
+          mintingAmount: undefined,
+        },
+      ],
+    }
+  },
+  methods: {
+    addInfoDetail() {
+      this.infoDetail.push({
+        comp: 'MintingInfoDetail',
+        mintingType: 'Public',
+        mintingTime: false,
+        mintingPrice: null,
+        mintingCurrency: 'KLAY',
+        mintingAmount: undefined,
+      })
+    },
+    test() {
+      console.log(this.infoDetail)
+    },
+  },
+  setup() {
+    const mintingDate = ref()
+
+    return {
+      mintingDate,
+    }
   },
 }
 </script>

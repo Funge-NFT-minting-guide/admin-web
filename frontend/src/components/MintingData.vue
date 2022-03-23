@@ -18,7 +18,11 @@
     </CInputGroup>
     -->
     <CCard>
-      <CCardHeader>{{ projectName }}</CCardHeader>
+      <CCardHeader>
+        {{ projectName }}&nbsp;&nbsp;
+        <CIcon :icon="cibTwitter" size="xxs"></CIcon>
+        {{ followersConvertToKMB }}
+      </CCardHeader>
       <CCardBody>
         <!--
         <CCardText v-for="tweetTextLine in tweetTextLines" :key="tweetTextLine">
@@ -40,6 +44,9 @@
 </template>
 
 <script>
+import { cilClone } from '@coreui/icons'
+import { cibTwitter } from '@coreui/icons'
+
 export default {
   name: 'MintingData',
   props: {
@@ -58,6 +65,11 @@ export default {
       default: undefined,
       requred: true,
     },
+    followers: {
+      type: Number,
+      default: undefined,
+      required: true,
+    },
     tweetText: {
       type: String,
       default: undefined,
@@ -71,6 +83,25 @@ export default {
     tweetTextNewline: function () {
       return this.tweetText.replaceAll('\n', '<br />')
     },
+    followersConvertToKMB: function () {
+      var num = this.followers
+      if (num >= 1000000000) {
+        return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B'
+      }
+      if (num >= 1000000) {
+        return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M'
+      }
+      if (num >= 1000) {
+        return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K'
+      }
+      return num
+    },
+  },
+  setup() {
+    return {
+      cilClone,
+      cibTwitter,
+    }
   },
 }
 </script>

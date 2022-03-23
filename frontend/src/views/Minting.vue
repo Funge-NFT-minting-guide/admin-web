@@ -81,6 +81,7 @@
                     :profileImageUrl="minting.profile_image_url"
                     :projectName="minting.user"
                     :tweetText="minting.text"
+                    :followers="minting.followers"
                   />
                   <MintingInfo
                     :tweetId="minting.id"
