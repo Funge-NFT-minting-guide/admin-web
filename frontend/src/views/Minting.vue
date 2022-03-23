@@ -77,6 +77,7 @@
               <CTableBody>
                 <CTableRow v-for="minting in mintingData" :key="minting.id">
                   <MintingData
+                    :tweetId="minting.id"
                     :profileImageUrl="minting.profile_image_url"
                     :projectName="minting.user"
                     :tweetText="minting.text"
