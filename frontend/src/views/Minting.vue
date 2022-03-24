@@ -75,17 +75,27 @@
               responsive
             >
               <CTableBody>
-                <CTableRow v-for="minting in mintingData" :key="minting.id">
+                <CTableRow v-for="(info, data) in minting" :key="data">
                   <MintingData
-                    :tweetId="minting.id"
-                    :profileImageUrl="minting.profile_image_url"
-                    :projectName="minting.user"
-                    :tweetText="minting.text"
-                    :followers="minting.followers"
+                    :tweetId="data.id"
+                    :profileImageUrl="data.profile_image_url"
+                    :projectName="data.user"
+                    :tweetText="data.text"
+                    :followers="data.followers"
                   />
+                  <!--
                   <MintingInfo
                     :tweetId="minting.id"
                     :projectName="minting.user"
+                  />
+                  -->
+                  <component
+                    v-for="i in info"
+                    :key="i.compId"
+                    :is="i.comp"
+                    :tweetId="i.tweetId"
+                    :compId="i.compId"
+                    @requestInfo="reqInfo"
                   />
                 </CTableRow>
               </CTableBody>
@@ -95,6 +105,7 @@
       </CCol>
     </CRow>
   </div>
+  <div>{{ infoIndex }}</div>
 </template>
 
 <script>
@@ -104,14 +115,45 @@ export default {
   name: 'Minting',
   data() {
     return {
+      infoIndex: [],
       mintingData: [],
+      mintingInfo: [],
+      minting: {},
     }
   },
-
+  methods: {
+    reqInfo(tid, cid) {
+      var midx = this.mintingData.indexOf(
+        this.mintingData.find((item) => item.id === tid),
+      )
+      if (!cid) {
+        this.mintingInfo[midx].push({
+          comp: 'MintingInfo',
+          compId: ++this.infoIndex[midx],
+          tweetId: tid,
+        })
+      } else {
+        var idx = this.mintingInfo[midx].indexOf(
+          this.mintingInfo[midx].find((item) => item.compId === cid),
+        )
+        this.mintingInfo[midx].splice(idx, 1)
+      }
+    },
+  },
   created() {
     getMintingTweets().then((response) => (this.mintingData = response.data))
+    this.infoIndex = new Array(this.mintingData.length).fill(0)
+    this.mintingData.forEach((minting, index) => {
+      this.mintingInfo.push([
+        {
+          comp: 'MintingInfo',
+          compId: this.infoIndex[index],
+          tweetId: minting.id,
+        },
+      ])
+    })
+    this.mintingData.forEach((k, i) => (this.minting[k] = this.mintingInfo[i]))
   },
-
   setup() {
     const progressData = [{ title: 'Processing', icon: 'cilCheck', value: 53 }]
 

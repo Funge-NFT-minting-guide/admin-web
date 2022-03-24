@@ -87,7 +87,7 @@ export default {
   },
   methods: {
     reqInfoDetail(e) {
-      this.$emit('requestAddInfoDetail', e.target.value)
+      this.$emit('requestInfoDetail', e.target.value)
     },
   },
   setup(props) {
