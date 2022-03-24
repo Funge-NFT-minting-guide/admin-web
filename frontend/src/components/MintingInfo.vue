@@ -21,7 +21,8 @@
             :mintingPrice="detail.mintingPrice"
             :mintingCurrency="detail.mintingCurrency"
             :mintingAmount="detail.mintingAmount"
-            @requestAddInfoDetail="addInfoDetail"
+            :compId="detail.compId"
+            @requestAddInfoDetail="reqInfoDetail"
           />
           <CInputGroup class="flex-nowrap">
             <CInputGroupText id="addon-wrapping">Site</CInputGroupText>
@@ -63,6 +64,7 @@ export default {
   },
   data() {
     return {
+      infoDetailIndex: 0,
       infoDetail: [
         {
           comp: 'MintingInfoDetail',
@@ -71,23 +73,32 @@ export default {
           mintingPrice: null,
           mintingCurrency: 'KLAY',
           mintingAmount: undefined,
+          compId: this.infoDetailIndex,
         },
       ],
     }
   },
   methods: {
-    addInfoDetail() {
-      this.infoDetail.push({
-        comp: 'MintingInfoDetail',
-        mintingType: 'Public',
-        mintingTime: false,
-        mintingPrice: null,
-        mintingCurrency: 'KLAY',
-        mintingAmount: undefined,
-      })
+    reqInfoDetail(id) {
+      if (!id) {
+        this.infoDetail.push({
+          comp: 'MintingInfoDetail',
+          mintingType: 'Public',
+          mintingTime: false,
+          mintingPrice: null,
+          mintingCurrency: 'KLAY',
+          mintingAmount: undefined,
+          compId: ++this.infoDetailIndex,
+        })
+      } else {
+        var idx = this.infoDetail.indexOf(
+          this.infoDetail.find((item) => item.compId == id),
+        )
+        this.infoDetail.splice(idx, 1)
+      }
     },
     test() {
-      console.log(this.infoDetail)
+      console.log(this.infoDetailIndex)
     },
   },
   setup() {

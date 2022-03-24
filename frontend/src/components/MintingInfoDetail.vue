@@ -25,8 +25,23 @@
       <CFormInput id="amountInput" :value="mintingAmount" />
       <CFormLabel for="amountInput">Amount</CFormLabel>
     </CFormFloating>
-    <CButton color="secondary" variant="outline" @click="addInfoDetail">
+    <CButton
+      :value="compId"
+      v-if="!compId"
+      color="secondary"
+      variant="outline"
+      @click="reqInfoDetail"
+    >
       Add
+    </CButton>
+    <CButton
+      :value="compId"
+      v-if="compId"
+      color="secondary"
+      variant="outline"
+      @click="reqInfoDetail"
+    >
+      Del&nbsp;
     </CButton>
   </CInputGroup>
 </template>
@@ -65,10 +80,14 @@ export default {
       default: undefined,
       required: false,
     },
+    compId: {
+      type: Number,
+      require: true,
+    },
   },
   methods: {
-    addInfoDetail() {
-      this.$emit('requestAddInfoDetail', true)
+    reqInfoDetail(e) {
+      this.$emit('requestAddInfoDetail', e.target.value)
     },
   },
   setup(props) {
