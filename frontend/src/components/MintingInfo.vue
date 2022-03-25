@@ -113,7 +113,7 @@ export default {
       }
     },
     reqInfo() {
-      this.$emit('requestInfo', this.prop.tweetId, this.props.compId)
+      this.$emit('requestInfo', this.tweetId, this.compId)
     },
     test() {
       console.log(this.infoDetailIndex)

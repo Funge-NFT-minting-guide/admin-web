@@ -75,7 +75,7 @@
               responsive
             >
               <CTableBody>
-                <CTableRow v-for="(info, data) in minting" :key="data">
+                <CTableRow v-for="(data, index) in mintingData" :key="data.id">
                   <MintingData
                     :tweetId="data.id"
                     :profileImageUrl="data.profile_image_url"
@@ -90,11 +90,11 @@
                   />
                   -->
                   <component
-                    v-for="i in info"
-                    :key="i.compId"
-                    :is="i.comp"
-                    :tweetId="i.tweetId"
-                    :compId="i.compId"
+                    v-for="info in mintingInfo[index]"
+                    :key="info.compId"
+                    :is="info.comp"
+                    :tweetId="info.tweetId"
+                    :compId="info.compId"
                     @requestInfo="reqInfo"
                   />
                 </CTableRow>
@@ -105,7 +105,6 @@
       </CCol>
     </CRow>
   </div>
-  <div>{{ infoIndex }}</div>
 </template>
 
 <script>
@@ -118,10 +117,21 @@ export default {
       infoIndex: [],
       mintingData: [],
       mintingInfo: [],
-      minting: {},
     }
   },
   methods: {
+    initMintingInfo() {
+      this.infoIndex = new Array(this.mintingData.length).fill(0)
+      this.mintingData.forEach((minting, index) => {
+        this.mintingInfo.push([
+          {
+            comp: 'MintingInfo',
+            compId: this.infoIndex[index],
+            tweetId: minting.id,
+          },
+        ])
+      })
+    },
     reqInfo(tid, cid) {
       var midx = this.mintingData.indexOf(
         this.mintingData.find((item) => item.id === tid),
@@ -140,19 +150,11 @@ export default {
       }
     },
   },
-  created() {
-    getMintingTweets().then((response) => (this.mintingData = response.data))
-    this.infoIndex = new Array(this.mintingData.length).fill(0)
-    this.mintingData.forEach((minting, index) => {
-      this.mintingInfo.push([
-        {
-          comp: 'MintingInfo',
-          compId: this.infoIndex[index],
-          tweetId: minting.id,
-        },
-      ])
-    })
-    this.mintingData.forEach((k, i) => (this.minting[k] = this.mintingInfo[i]))
+  async created() {
+    await getMintingTweets().then(
+      (response) => (this.mintingData = response.data),
+    )
+    this.initMintingInfo()
   },
   setup() {
     const progressData = [{ title: 'Processing', icon: 'cilCheck', value: 53 }]
