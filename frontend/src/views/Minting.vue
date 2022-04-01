@@ -1,7 +1,7 @@
 <template>
   <div>
     <CRow>
-      <CCol :lg="auto">
+      <CCol :lg="12">
         <CCard class="mb-4">
           <CCardHeader> Minting Information </CCardHeader>
           <CCardBody>
@@ -45,7 +45,7 @@
                       class="border-start border-start-4 border-start-warning py-1 px-3 mb-3"
                     >
                       <div class="text-medium-emphasis small">This Week</div>
-                      <div class="fs-5 fw-semibold"><Test /></div>
+                      <div class="fs-5 fw-semibold">123</div>
                     </div>
                   </CCol>
                 </CRow>
@@ -67,39 +67,41 @@
               </CCol>
             </CRow>
             <br />
-            <CTable align="middle" class="mb-0 border" hover responsive>
+            <CTable
+              align="middle"
+              class="mb-0 border"
+              style="width: 100%"
+              hover
+              responsive
+            >
               <CTableBody>
-                <CTableRow>
-                  <CTableDataCell>
-                    <CFormCheck disabled />
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <CAvatar
-                      size="xl"
-                      src="https://pbs.twimg.com/profile_images/1475512050294362114/Dj4uIk2k_normal.jpg"
-                    />
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <CInputGroup class="flex-nowrap">
-                      <CInputGroupText id="addon-wrapping">@</CInputGroupText>
-                      <CFormInput
-                        placeholder="MetaKongz"
-                        aria-label="Username"
-                        disabled
-                      />
-                    </CInputGroup>
-                    <CInputGroup class="flex-nowrap">
-                      <CInputGroupText>Origin</CInputGroupText>
-                      <CFormTextarea v-model="message" disabled></CFormTextarea>
-                    </CInputGroup>
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <CIcon :icon="cilClone" size="xxl" />
-                  </CTableDataCell>
-                  <MintingInfo />
+                <CTableRow v-for="(data, index) in mintingData" :key="data.id">
+                  <MintingData
+                    :tweetId="data.id"
+                    :profileImageUrl="data.profile_image_url"
+                    :projectName="data.user"
+                    :tweetText="data.text"
+                    :followers="data.followers"
+                    @requestDataButton="reqDataButton"
+                  />
+                  <!--
+                  <MintingInfo
+                    :tweetId="minting.id"
+                    :projectName="minting.user"
+                  />
+                  -->
+                  <component
+                    v-for="info in mintingInfo[index]"
+                    :key="info.compId"
+                    :is="info.comp"
+                    :tweetId="info.tweetId"
+                    :compId="info.compId"
+                    @requestInfo="reqInfo"
+                  />
                 </CTableRow>
               </CTableBody>
             </CTable>
+            <infinite-loading @infinite="loadData" />
           </CCardBody>
         </CCard>
       </CCol>
@@ -108,19 +110,84 @@
 </template>
 
 <script>
-import { cilClone } from '@coreui/icons'
-import MintingInfo from '@/components/MintingInfo.vue'
+import { ref } from 'vue'
+import { getMintingTweets, putMintingTweetsFlag } from '@/api/minting'
 
 export default {
-  name: 'Dashboard',
+  name: 'Minting',
   setup() {
     const progressData = [{ title: 'Processing', icon: 'cilCheck', value: 53 }]
+    const mintingData = ref([])
+    const mintingInfo = ref([])
+    let offset = 0
+    let infoIndex = []
+    const loadData = async ($state) => {
+      try {
+        const response = await getMintingTweets(
+          JSON.stringify({ processed: false, invalid: false, outdated: false }),
+          -1,
+          offset,
+        )
+        if (response.data.length === 0) $state.complete()
+        else {
+          await mintingData.value.push(...response.data)
+          await initMintingInfo(offset)
+          await $state.loaded()
+        }
+        offset += response.data.length
+      } catch (error) {
+        $state.error()
+      }
+    }
+    const initMintingInfo = (dataOffset) => {
+      mintingData.value.slice(dataOffset).forEach((minting, index) => {
+        infoIndex.push(-1)
+        mintingInfo.value.push([
+          {
+            comp: 'MintingInfo',
+            compId: ++infoIndex[index + dataOffset],
+            tweetId: minting.id,
+          },
+        ])
+      })
+    }
+    const reqInfo = (tid, cid) => {
+      let midx = mintingData.value.indexOf(
+        mintingData.value.find((item) => item.id === tid),
+      )
+      if (!cid) {
+        mintingInfo.value[midx].push({
+          comp: 'MintingInfo',
+          compId: ++infoIndex[midx],
+          tweetId: tid,
+        })
+        console.log(infoIndex[midx])
+      } else {
+        let idx = mintingInfo.value[midx].indexOf(
+          mintingInfo.value[midx].find((item) => item.compId === cid),
+        )
+        mintingInfo.value[midx].splice(idx, 1)
+      }
+    }
+    const reqDataButton = (tid, bid) => {
+      let midx = mintingData.value.indexOf(
+        mintingData.value.find((item) => item.id === tid),
+      )
+      let flag = bid === 'deleted' ? 'invalid' : 'outdated'
 
+      putMintingTweetsFlag(tid, flag)
+      mintingData.value.splice(midx, 1)
+      mintingInfo.value.splice(midx, 1)
+      infoIndex.splice(midx, 1)
+      offset -= 1
+    }
     return {
-      MintingInfo,
       progressData,
-      message: 'test',
-      cilClone,
+      mintingData,
+      mintingInfo,
+      loadData,
+      reqInfo,
+      reqDataButton,
     }
   },
 }

@@ -1,3 +1,14 @@
 <template>
-  <span>test123!</span>
+  <span>test1!</span>
 </template>
+
+<script>
+export default {
+  name: 'Test',
+  data() {
+    return {
+      test: [],
+    }
+  },
+}
+</script>
