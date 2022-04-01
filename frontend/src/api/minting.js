@@ -5,4 +5,10 @@ function getMintingTweets(query, order = -1, offset = 0, limit = 10) {
     /minting/tweets?query=${query}&order=${order}&offset=${offset}&limit=${limit}`)
 }
 
-export { getMintingTweets }
+function putMintingTweetsFlag(id, flag) {
+  return instance.put(`
+    /minting/tweets/${id}?flag=${flag}
+    `)
+}
+
+export { getMintingTweets, putMintingTweetsFlag }

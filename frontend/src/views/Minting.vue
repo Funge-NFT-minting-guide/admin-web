@@ -111,7 +111,7 @@
 
 <script>
 import { ref } from 'vue'
-import { getMintingTweets } from '@/api/minting'
+import { getMintingTweets, putMintingTweetsFlag } from '@/api/minting'
 
 export default {
   name: 'Minting',
@@ -124,15 +124,15 @@ export default {
     const loadData = async ($state) => {
       try {
         const response = await getMintingTweets(
-          { processed: false },
+          JSON.stringify({ processed: false, invalid: false, outdated: false }),
           -1,
           offset,
         )
         if (response.data.length === 0) $state.complete()
         else {
-          mintingData.value.push(...response.data)
-          initMintingInfo(offset)
-          $state.loaded()
+          await mintingData.value.push(...response.data)
+          await initMintingInfo(offset)
+          await $state.loaded()
         }
         offset += response.data.length
       } catch (error) {
@@ -170,15 +170,16 @@ export default {
       }
     }
     const reqDataButton = (tid, bid) => {
-      console.log(bid)
       let midx = mintingData.value.indexOf(
         mintingData.value.find((item) => item.id === tid),
       )
-      // TODO: connect to api
+      let flag = bid === 'deleted' ? 'invalid' : 'outdated'
+
+      putMintingTweetsFlag(tid, flag)
       mintingData.value.splice(midx, 1)
       mintingInfo.value.splice(midx, 1)
       infoIndex.splice(midx, 1)
-      offset - 1
+      offset -= 1
     }
     return {
       progressData,
