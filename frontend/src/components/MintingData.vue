@@ -19,9 +19,11 @@
     -->
     <CCard>
       <CCardHeader>
-        {{ projectName }}&nbsp;&nbsp;
-        <CIcon :icon="cibTwitter" size="xxs"></CIcon>
-        {{ followersConvertToKMB }}
+        {{ projectName }}
+        <CBadge color="info" shape="rounded-pill">
+          <CIcon :icon="cibTwitter" size="sm"></CIcon>
+          {{ followersConvertToKMB }}
+        </CBadge>
       </CCardHeader>
       <CCardBody>
         <!--
@@ -34,9 +36,13 @@
     </CCard>
   </CTableDataCell>
   <CTableDataCell>
-    <CButton color="danger" shape="rounded-pill">Delete</CButton>
+    <CButton @click="reqDataButtonDel" color="danger" shape="rounded-pill">
+      Delete
+    </CButton>
     <br /><br />
-    <CButton color="warning" shape="rounded-pill">Outdated</CButton>
+    <CButton @click="reqDataButtonOut" color="warning" shape="rounded-pill">
+      Outdated
+    </CButton>
   </CTableDataCell>
   <CTableDataCell>
     <CIcon :icon="cilClone" size="xxl" />
@@ -97,10 +103,18 @@ export default {
       return num
     },
   },
-  setup() {
+  setup(props, context) {
+    const reqDataButtonDel = () => {
+      context.emit('requestDataButton', props.tweetId, 'deleted')
+    }
+    const reqDataButtonOut = () => {
+      context.emit('requestDataButton', props.tweetId, 'outdated')
+    }
     return {
       cilClone,
       cibTwitter,
+      reqDataButtonDel,
+      reqDataButtonOut,
     }
   },
 }
