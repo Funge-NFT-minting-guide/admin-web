@@ -96,7 +96,13 @@
                     :is="info.comp"
                     :tweetId="info.tweetId"
                     :compId="info.compId"
+                    :objectId="info.objectId"
+                    :projectName="data.user"
+                    :profileImageUrl="data.profile_image_url"
+                    :followers="data.followers"
+                    :url="data.url"
                     @requestInfo="reqInfo"
+                    @requestSaveMintingInfo="reqDataButton"
                   />
                 </CTableRow>
               </CTableBody>
@@ -107,11 +113,26 @@
       </CCol>
     </CRow>
   </div>
+  <CToaster placement="top-end">
+    <CToast v-for="toast in toasts" :key="toast">
+      <CToastHeader closeButton>
+        <span class="me-auto fw-bold">{{ toast.title }}</span>
+        <small>1 sec ago</small>
+      </CToastHeader>
+      <CToastBody>
+        {{ toast.content }}
+      </CToastBody>
+    </CToast>
+  </CToaster>
 </template>
 
 <script>
 import { ref } from 'vue'
-import { getMintingTweets, putMintingTweetsFlag } from '@/api/minting'
+import {
+  getMintingTweets,
+  putMintingTweetsFlag,
+  getMintingInfoByTid,
+} from '@/api/minting'
 
 export default {
   name: 'Minting',
@@ -119,6 +140,7 @@ export default {
     const progressData = [{ title: 'Processing', icon: 'cilCheck', value: 53 }]
     const mintingData = ref([])
     const mintingInfo = ref([])
+    const toasts = ref([])
     let offset = 0
     let infoIndex = []
     const loadData = async ($state) => {
@@ -142,13 +164,36 @@ export default {
     const initMintingInfo = (dataOffset) => {
       mintingData.value.slice(dataOffset).forEach((minting, index) => {
         infoIndex.push(-1)
-        mintingInfo.value.push([
-          {
-            comp: 'MintingInfo',
-            compId: ++infoIndex[index + dataOffset],
-            tweetId: minting.id,
-          },
-        ])
+        getMintingInfoByTid(minting.id)
+          .then((response) => {
+            mintingInfo.value.push([])
+            for (var info of response.data) {
+              mintingInfo.value[index + dataOffset].push({
+                comp: 'MintingInfo',
+                compId: ++infoIndex[index + dataOffset],
+                tweetId: minting.id,
+                objectId: info._id.$oid,
+              })
+            }
+          })
+          .catch((error) => {
+            if (error.response.status == 404) {
+              mintingInfo.value.push([
+                {
+                  comp: 'MintingInfo',
+                  compId: ++infoIndex[index + dataOffset],
+                  tweetId: minting.id,
+                  objectId: null,
+                },
+              ])
+            }
+          })
+      })
+    }
+    const creatToast = (title, content) => {
+      toasts.value.push({
+        title: title,
+        content: content,
       })
     }
     const reqInfo = (tid, cid) => {
@@ -160,6 +205,7 @@ export default {
           comp: 'MintingInfo',
           compId: ++infoIndex[midx],
           tweetId: tid,
+          objectId: null,
         })
         console.log(infoIndex[midx])
       } else {
@@ -173,18 +219,20 @@ export default {
       let midx = mintingData.value.indexOf(
         mintingData.value.find((item) => item.id === tid),
       )
-      let flag = bid === 'deleted' ? 'invalid' : 'outdated'
-
-      putMintingTweetsFlag(tid, flag)
+      putMintingTweetsFlag(tid, bid)
       mintingData.value.splice(midx, 1)
       mintingInfo.value.splice(midx, 1)
       infoIndex.splice(midx, 1)
       offset -= 1
+      if (bid == 'processed') {
+        creatToast('Notification', 'Successfully saved.')
+      }
     }
     return {
       progressData,
       mintingData,
       mintingInfo,
+      toasts,
       loadData,
       reqInfo,
       reqDataButton,

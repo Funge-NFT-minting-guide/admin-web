@@ -1,6 +1,6 @@
 <template>
   <CInputGroup class="flex-nowrap">
-    <CFormSelect v-model="type.seleted">
+    <CFormSelect v-model="type.seleted" @change="reqUpdateType">
       <option
         v-for="item in type.items"
         :key="item"
@@ -8,12 +8,17 @@
         :value="item"
       />
     </CFormSelect>
-    <Datepicker v-model="time" class="date-picker" timePicker />
+    <Datepicker
+      v-model="time"
+      class="date-picker"
+      timePicker
+      @update:modelValue="reqUpdateTime"
+    />
     <CFormFloating>
-      <CFormInput id="priceInput" :value="price" />
+      <CFormInput id="priceInput" :value="price" @change="reqUpdatePrice" />
       <CFormLabel for="priceInput">Price</CFormLabel>
     </CFormFloating>
-    <CFormSelect v-model="currency.seleted">
+    <CFormSelect v-model="currency.seleted" @change="reqUpdateCurrency">
       <option
         v-for="item in currency.items"
         :key="item"
@@ -22,7 +27,11 @@
       />
     </CFormSelect>
     <CFormFloating>
-      <CFormInput id="amountInput" :value="mintingAmount" />
+      <CFormInput
+        id="amountInput"
+        :value="mintingAmount"
+        @change="reqUpdateAmount"
+      />
       <CFormLabel for="amountInput">Amount</CFormLabel>
     </CFormFloating>
     <CButton
@@ -47,13 +56,10 @@
 </template>
 
 <script>
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 
 export default {
   name: 'MintingInfoDetail',
-  data() {
-    return {}
-  },
   props: {
     mintingType: {
       type: String,
@@ -85,17 +91,12 @@ export default {
       require: true,
     },
   },
-  methods: {
-    reqInfoDetail(e) {
-      this.$emit('requestInfoDetail', e.target.value)
-    },
-  },
-  setup(props) {
-    const type = reactive({
-      items: ['Public', 'WL'],
+  setup(props, { emit }) {
+    const type = ref({
+      items: ['Public', 'WL', 'OG'],
       seleted: props.mintingType,
     })
-    const time = ref(props.mintingTime)
+    const time = ref(0)
     const price = ref(props.mintingPrice)
     const currency = ref({
       items: ['KLAY', 'ETH'],
@@ -103,12 +104,39 @@ export default {
     })
     const amount = ref(props.mintingAmount)
 
+    const reqInfoDetail = (e) => {
+      emit('requestInfoDetail', e.target.value)
+    }
+
+    const reqUpdateType = (e) => {
+      emit('requestUpdateType', props.compId, e.target.value)
+    }
+
+    const reqUpdateTime = () => {
+      emit('requestUpdateTime', props.compId, time.value)
+    }
+    const reqUpdatePrice = (e) => {
+      emit('requestUpdatePrice', props.compId, e.target.value)
+    }
+    const reqUpdateCurrency = (e) => {
+      emit('requestUpdateCurrency', props.compId, e.target.value)
+    }
+    const reqUpdateAmount = (e) => {
+      emit('requestUpdateAmount', props.compId, e.target.value)
+    }
+
     return {
       type,
       time,
       price,
       currency,
       amount,
+      reqInfoDetail,
+      reqUpdateType,
+      reqUpdateTime,
+      reqUpdatePrice,
+      reqUpdateCurrency,
+      reqUpdateAmount,
     }
   },
 }
