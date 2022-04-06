@@ -119,6 +119,7 @@ export default {
     const infoDetail = ref([])
 
     const initInfoDetail = () => {
+      console.log(props.objectIdj)
       if (props.objectId != null) {
         getMintingInfoByOid(props.objectId)
           .then((response) => {
