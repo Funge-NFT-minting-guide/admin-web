@@ -1,9 +1,11 @@
 import json
 
+import pytz
 from bson import json_util
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from flask import Flask, request, abort
+from dateutil import parser as dateparser
 from flask_restx import Api, Resource, fields, reqparse
 
 from common import *
@@ -46,6 +48,7 @@ class MintingInfo(Resource):
         object_id = document['objectId']
         print(object_id)
         del document['objectId']
+        document['date'] = dateparser.parse(document['date']).astimezone(pytz.timezone('Asia/Seoul'))
         if not object_id:
             db.replace_one('mintingInfo', {'_id': ObjectId(object_id)}, document)
         else:

@@ -98,10 +98,10 @@
                     :tweetId="info.tweetId"
                     :compId="info.compId"
                     :objectId="info.objectId"
-                    :projectName="data.user"
-                    :profileImageUrl="data.profile_image_url"
-                    :followers="data.followers"
-                    :url="data.url"
+                    :projectName="data[1].mintingData.user"
+                    :profileImageUrl="data[1].mintingData.profile_image_url"
+                    :followers="data[1].mintingData.followers"
+                    :url="data[1].mintingData.url"
                     @requestInfo="reqInfo"
                     @requestSaveMintingInfo="reqDataButton"
                   />
@@ -158,6 +158,7 @@ export default {
                   mintingData: data,
                   mintingInfo: info.data,
                   infoIndex: info.length,
+                  saved: false,
                 })
               })
               .catch(() => {
@@ -172,6 +173,7 @@ export default {
                     },
                   ],
                   infoIndex: 0,
+                  saved: false,
                 })
               })
           }
@@ -183,37 +185,6 @@ export default {
         $state.error()
       }
     }
-    /*
-    const initMintingInfo = (dataOffset) => {
-      mintingData.value.slice(dataOffset).forEach((minting, index) => {
-        infoIndex.push(-1)
-        getMintingInfoByTid(minting.id)
-          .then((response) => {
-            mintingInfo.value.push([])
-            for (var info of response.data) {
-              mintingInfo.value[index + dataOffset].push({
-                comp: 'MintingInfo',
-                compId: ++infoIndex[index + dataOffset],
-                tweetId: minting.id,
-                objectId: info._id.$oid,
-              })
-            }
-          })
-          .catch((error) => {
-            if (error.response.status == 404) {
-              mintingInfo.value.push([
-                {
-                  comp: 'MintingInfo',
-                  compId: ++infoIndex[index + dataOffset],
-                  tweetId: minting.id,
-                  objectId: null,
-                },
-              ])
-            }
-          })
-      })
-    }
-    */
     const creatToast = (title, content) => {
       toasts.value.push({
         title: title,
