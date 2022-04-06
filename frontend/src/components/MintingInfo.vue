@@ -5,7 +5,7 @@
         <CTableDataCell>
           <CInputGroup class="flex-nowrap">
             <CInputGroupText id="addon-wrapping">@</CInputGroupText>
-            <CFormInput :value="projName" aria-label="Username" />
+            <CFormInput v-model="projName" aria-label="Username" />
           </CInputGroup>
           <CInputGroup class="flex-nowrap">
             <CInputGroupText>Date</CInputGroupText>
@@ -31,11 +31,11 @@
           />
           <CInputGroup class="flex-nowrap">
             <CInputGroupText id="addon-wrapping">Site</CInputGroupText>
-            <CFormInput :value="_site" />
+            <CFormInput v-model="_site" />
           </CInputGroup>
           <CInputGroup class="flex-nowrap">
             <CInputGroupText>ETC.</CInputGroupText>
-            <CFormInput :value="_etc" />
+            <CFormInput v-model="_etc" />
           </CInputGroup>
         </CTableDataCell>
         <CTableDataCell>
@@ -112,13 +112,14 @@ export default {
   setup(props, { emit }) {
     const oid = toRef(props, 'objectId')
     const projName = toRef(props, 'projectName')
-    const _date = ref(0)
+    const _date = ref()
     const _site = ref()
     const _etc = ref()
     let infoDetailIndex = 0
     const infoDetail = ref([])
 
     const initInfoDetail = () => {
+      console.log(props.objectIdj)
       if (props.objectId != null) {
         getMintingInfoByOid(props.objectId)
           .then((response) => {
@@ -212,7 +213,6 @@ export default {
 
     onMounted(() => {
       initInfoDetail()
-      console.log()
     })
 
     return {
