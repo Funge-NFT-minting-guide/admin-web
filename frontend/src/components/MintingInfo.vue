@@ -208,7 +208,7 @@ export default {
           detail: infoDetail.value,
         }),
       )
-      emit('requestSaveMintingInfo', props.tweetId, 'processed')
+      emit('requestSaveMintingInfo', props.tweetId, props.compId, 'processed')
     }
 
     onMounted(() => {

@@ -67,7 +67,6 @@
               </CCol>
             </CRow>
             <br />
-            <Test />
             <CTable
               align="middle"
               class="mb-0 border"
@@ -103,7 +102,7 @@
                     :followers="data[1].mintingData.followers"
                     :url="data[1].mintingData.url"
                     @requestInfo="reqInfo"
-                    @requestSaveMintingInfo="reqDataButton"
+                    @requestSaveMintingInfo="reqSaveButton"
                   />
                 </CTableRow>
               </CTableBody>
@@ -158,7 +157,6 @@ export default {
                   mintingData: data,
                   mintingInfo: info.data,
                   infoIndex: info.length,
-                  saved: false,
                 })
               })
               .catch(() => {
@@ -173,7 +171,6 @@ export default {
                     },
                   ],
                   infoIndex: 0,
-                  saved: false,
                 })
               })
           }
@@ -210,8 +207,13 @@ export default {
     const reqDataButton = (tid, bid) => {
       putMintingTweetsFlag(tid, bid)
       mintingMap.delete(tid)
-      if (bid == 'processed') {
-        creatToast('Notification', 'Successfully saved.')
+      offset -= 1
+    }
+    const reqSaveButton = (tid, cid, bid) => {
+      putMintingTweetsFlag(tid, bid)
+      creatToast('Notification', 'Successfully saved.')
+      if (!cid) {
+        mintingMap.delete(tid)
       }
       offset -= 1
     }
@@ -222,6 +224,7 @@ export default {
       loadData,
       reqInfo,
       reqDataButton,
+      reqSaveButton,
     }
   },
 }
