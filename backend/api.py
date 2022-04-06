@@ -1,6 +1,7 @@
 import json
 
 import pytz
+import datetime
 from bson import json_util
 from pymongo import MongoClient
 from bson.objectid import ObjectId
@@ -31,6 +32,9 @@ minting_info = api.model('MintingInfo', {
 
 parser = reqparse.RequestParser()
 parser.add_argument('filter', type=str, choices=('_id', 'tweetId'))
+parser.add_argument('query', type=str, default='{}')
+parser.add_argument('startdate', type=str)
+parser.add_argument('enddate', type=str)
 
 db = DAO('funge-admin')
 
@@ -49,7 +53,8 @@ class MintingInfo(Resource):
         print(object_id)
         del document['objectId']
         document['date'] = dateparser.parse(document['date']).astimezone(pytz.timezone('Asia/Seoul'))
-        if not object_id:
+        print(document['date'])
+        if object_id:
             db.replace_one('mintingInfo', {'_id': ObjectId(object_id)}, document)
         else:
             db.insert_one('mintingInfo', document)
@@ -62,6 +67,7 @@ class MintingInfoTid(Resource):
         args = parser.parse_args()
         print(args)
         if args['filter'] == '_id':
+            print(args['filter'])
             if _id != 'null':
                 ret = list(db.find('mintingInfo', {args['filter']: ObjectId(_id)}))
             else:
@@ -71,6 +77,20 @@ class MintingInfoTid(Resource):
         ret = [json.loads(json_util.dumps(x)) for x in ret]
         return ret if ret else abort(*ERR_NOT_FOUND)
 
+
+@api.route('/minting/info/total')
+class MintingInfoTotal(Resource):
+    def get(self):
+        ret = db.countTotal('mintingInfo')
+        return ret
+
+
+@api.route('/minting/info/total/date')
+class MintingInfoToday(Resource):
+    def get(self):
+        args = parser.parse_args()
+        ret = db.count('mintingInfo', {'date': {'$gte': datetime.datetime.strptime(args['startdate'], '%Y-%m-%d'), '$lt': datetime.datetime.strptime(args['enddate'], '%Y-%m-%d')}})
+        return ret
 
 
 

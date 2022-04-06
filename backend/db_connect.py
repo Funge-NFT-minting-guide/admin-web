@@ -24,5 +24,11 @@ class DAO:
     def insert_many(self, collection, documents):
         return self.mongo[collection].insert_many(documents)
 
-    def replace_one(self, collection, document, replaced):
-        return self.mongo[collection].replace_one(document, replaced, True)
+    def replace_one(self, collection, query, document):
+        return self.mongo[collection].replace_one(query, document)
+
+    def countTotal(self, collection):
+        return self.mongo[collection].estimated_document_count()
+
+    def count(self, collection, query):
+        return self.mongo[collection].count_documents(filter=query)

@@ -13,7 +13,9 @@
                       class="border-start border-start-4 border-start-info py-1 px-3 mb-3"
                     >
                       <div class="text-medium-emphasis small">Total Tweets</div>
-                      <div class="fs-5 fw-semibold">9,123</div>
+                      <div class="fs-5 fw-semibold">
+                        {{ totalTweets }}
+                      </div>
                     </div>
                   </CCol>
                   <CCol>
@@ -21,7 +23,7 @@
                       class="border-start border-start-4 border-start-danger py-1 px-3 mb-3"
                     >
                       <div class="text-medium-emphasis small">Minting Data</div>
-                      <div class="fs-5 fw-semibold">22,643</div>
+                      <div class="fs-5 fw-semibold">{{ totalData }}</div>
                     </div>
                   </CCol>
                   <CCol>
@@ -29,7 +31,7 @@
                       class="border-start border-start-4 border-start-success py-1 px-3 mb-3"
                     >
                       <div class="text-medium-emphasis small">Minting Info</div>
-                      <div class="fs-5 fw-semibold">9,123</div>
+                      <div class="fs-5 fw-semibold">{{ totalInfo }}</div>
                     </div>
                   </CCol>
                   <CCol>
@@ -37,7 +39,7 @@
                       class="border-start border-start-4 border-start-warning py-1 px-3 mb-3"
                     >
                       <div class="text-medium-emphasis small">Today</div>
-                      <div class="fs-5 fw-semibold">22,643</div>
+                      <div class="fs-5 fw-semibold">{{ todayInfo }}</div>
                     </div>
                   </CCol>
                   <CCol>
@@ -45,7 +47,7 @@
                       class="border-start border-start-4 border-start-warning py-1 px-3 mb-3"
                     >
                       <div class="text-medium-emphasis small">This Week</div>
-                      <div class="fs-5 fw-semibold">123</div>
+                      <div class="fs-5 fw-semibold">{{ weekInfo }}</div>
                     </div>
                   </CCol>
                 </CRow>
@@ -127,11 +129,15 @@
 </template>
 
 <script>
-import { ref, reactive } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import {
   getMintingTweets,
-  putMintingTweetsFlag,
+  getMintingDataTotal,
+  getMintingInfoTotal,
   getMintingInfoByTid,
+  putMintingTweetsFlag,
+  getMintingTweetsTotal,
+  getMintingInfoTotalDate,
 } from '@/api/minting'
 
 export default {
@@ -140,7 +146,14 @@ export default {
     const progressData = [{ title: 'Processing', icon: 'cilCheck', value: 53 }]
     const mintingMap = reactive(new Map())
     const toasts = ref([])
+    const totalTweets = ref()
+    const totalData = ref()
+    const totalInfo = ref()
+    const todayInfo = ref()
+    const weekInfo = ref()
+    const watcher = ref(0)
     let offset = 0
+
     const loadData = async ($state) => {
       try {
         const response = await getMintingTweets(
@@ -178,6 +191,7 @@ export default {
           await $state.loaded()
         }
         offset += response.data.length
+        watcher.value = !watcher.value
       } catch (error) {
         $state.error()
       }
@@ -208,15 +222,38 @@ export default {
       putMintingTweetsFlag(tid, bid)
       mintingMap.delete(tid)
       offset -= 1
+      watcher.value = !watcher.value
     }
     const reqSaveButton = (tid, cid, bid) => {
       putMintingTweetsFlag(tid, bid)
       creatToast('Notification', 'Successfully saved.')
       if (!cid) {
         mintingMap.delete(tid)
+        offset -= 1
+        watcher.value = !watcher.value
       }
-      offset -= 1
     }
+    watch(watcher, () => {
+      getMintingTweetsTotal().then((response) => {
+        totalTweets.value = response.data
+      })
+      getMintingDataTotal(JSON.stringify({ invalid: false })).then(
+        (response) => {
+          totalData.value = response.data
+        },
+      )
+      getMintingInfoTotal().then((response) => {
+        totalInfo.value = response.data
+      })
+      var year = new Date().getUTCFullYear()
+      var month = new Date().getMonth()
+      var day = new Date().getUTCDate()
+      var today = `${year}-${month + 1}-${day}`
+      var tomorrow = `${year}-${month + 1}-${day + 1}`
+      getMintingInfoTotalDate(today, tomorrow).then((response) => {
+        todayInfo.value = response.data
+      })
+    })
     return {
       progressData,
       mintingMap,
@@ -225,6 +262,11 @@ export default {
       reqInfo,
       reqDataButton,
       reqSaveButton,
+      totalTweets,
+      totalData,
+      totalInfo,
+      todayInfo,
+      weekInfo,
     }
   },
 }

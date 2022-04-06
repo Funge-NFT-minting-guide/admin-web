@@ -22,3 +22,22 @@ export function getMintingInfoByOid(objectId) {
 export function postMintingInfo(info) {
   return instance.post('/minting/info', info)
 }
+
+export function getMintingTweetsTotal() {
+  return instance.get(`/minting/tweets/total`)
+}
+
+export function getMintingDataTotal(query) {
+  return instance.get(`/minting/data/total?query=${query}`)
+}
+
+export function getMintingInfoTotal() {
+  return instance.get(`/minting/info/total`)
+}
+
+export function getMintingInfoTotalDate(startdate, enddate) {
+  return instance.get(
+    `/minting/info/total/date?startdate=${startdate}&enddate=${enddate}
+    `,
+  )
+}
