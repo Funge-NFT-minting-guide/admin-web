@@ -36,6 +36,7 @@
     "v3-infinite-loading": "^1.0.6",
     "vue": "^3.2.23",
     "vue-cli-plugin-docker-nginx-diff-proxy": "^1.1.7",
+    "vue-cookies": "^1.8.0",
     "vue-infinite-loading": "^2.4.5",
     "vue-router": "^4.0.12",
     "vue-textarea-autosize": "^1.1.1",
