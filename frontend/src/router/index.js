@@ -53,12 +53,13 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  let isAuthenticated = localStorage.getItem('isAuthenticated')
+  let isAuthenticated = self.$cookies.get('isAuthenticated') === 'true'
 
+  console.log(isAuthenticated)
   console.log(to.meta)
   if (to.meta.requiredAuth) {
     if (!isAuthenticated && to.name !== 'Login') {
-      return next({ name: 'Login' })
+      return next('/login')
     }
   } else {
     if (isAuthenticated && to.name === 'Login') {

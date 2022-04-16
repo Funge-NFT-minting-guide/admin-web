@@ -1,5 +1,5 @@
 <template>
-  <CDropdown variant="nav-item">
+  <CDropdown v-if="isAuthenticated" variant="nav-item">
     <CDropdownToggle placement="bottom-end" class="py-0" :caret="false">
       <CAvatar :src="avatar" size="md" />
     </CDropdownToggle>
@@ -8,19 +8,33 @@
         Account
       </CDropdownHeader>
       <CDropdownItem> <CIcon icon="cil-user" /> Profile </CDropdownItem>
-      <CDropdownItem> <CIcon icon="cil-lock-locked" /> Logout </CDropdownItem>
+      <CDropdownItem @click="reqLogout">
+        <CIcon icon="cil-lock-locked" /> Logout
+      </CDropdownItem>
     </CDropdownMenu>
   </CDropdown>
 </template>
 
 <script>
+import { logout } from '@/api/auth'
+import { computed } from 'vue'
+import { useStore } from 'vuex'
 import avatar from '@/assets/images/avatars/8.jpg'
 export default {
   name: 'AppHeaderDropdownAccnt',
   setup() {
+    const store = useStore()
+    const isAuthenticated = computed(() => store.getters.getAuthStatus)
+
+    const reqLogout = async () => {
+      await logout()
+      location.reload()
+    }
+
     return {
       avatar: avatar,
-      itemsCount: 42,
+      isAuthenticated,
+      reqLogout,
     }
   },
 }

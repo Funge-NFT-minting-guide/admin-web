@@ -17,12 +17,14 @@ import Datepicker from 'vue3-date-time-picker'
 import 'vue3-date-time-picker/dist/main.css'
 import InfiniteLoading from 'v3-infinite-loading'
 import 'v3-infinite-loading/lib/style.css'
+import VueCookies from 'vue-cookies'
 
 const app = createApp(App)
 app.use(store)
 app.use(router)
 app.use(CoreuiVue)
 app.use(InfiniteLoading)
+app.use(VueCookies)
 app.provide('icons', icons)
 app.component('CIcon', CIcon)
 app.component('DocsCallout', DocsCallout)

@@ -8,6 +8,10 @@ export function login(loginInfo) {
   })
 }
 
+export function logout() {
+  return instance.get('/admin/signout')
+}
+
 export function prot() {
   return instance.get('/admin/protected')
 }

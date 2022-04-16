@@ -31,7 +31,7 @@
                 </CInputGroup>
                 <CRow>
                   <CCol :xs="6">
-                    <CButton color="primary" class="px-4" @click="reqLogin">
+                    <CButton color="primary" class="px-4" @click="login">
                       Login
                     </CButton>
                   </CCol>
@@ -46,10 +46,11 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+//import { ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
-import { login } from '@/api/auth'
+//import { login } from '@/api/auth'
 
 export default {
   name: 'Login',
@@ -59,13 +60,25 @@ export default {
     const password = ref()
     const store = useStore()
     const router = useRouter()
+    const getAuthStatus = computed(() => store.getters.getAuthStatus)
 
+    const login = () => {
+      let loginInfo = { username: username.value, password: password.value }
+      store.dispatch('requestLogin', loginInfo)
+        .then(() => {
+          if (!getAuthStatus.value) {
+            alert('Login failed.')
+          } else {
+            router.push('/dashboard')
+          }
+          })
+    }
+    /*
     const reqLogin = () => {
       let loginInfo = { username: username.value, password: password.value }
       login(loginInfo)
         .then(async (response) => {
           if (response.status === 200) {
-            store.commit('setAuthStatus', true)
             router.push('/dashboard')
           }
         })
@@ -73,11 +86,12 @@ export default {
           alert('Login failed.')
         })
     }
+    */
 
     return {
       username,
       password,
-      reqLogin,
+      login,
     }
   },
 }

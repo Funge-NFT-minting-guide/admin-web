@@ -11,18 +11,15 @@ const mutations = {
 }
 
 const actions = {
-  async requestLogin({ commit }, payload) {
-    await login(payload)
-      .then((response) => {
-        if (response && response.data) {
-          localStorage.setItem('isAuthenticated', true)
-          commit('setAuthStatus', true)
-        } else {
-          commit('setAuthStatus', false)
+  requestLogin({ commit }, payload) {
+    login(payload)
+      .then(async (response) => {
+        if (response.status === 200) {
+          await commit('setAuthStatus', true)
         }
       })
-      .catch((err) => {
-        console.log(err)
+      .catch(() => {
+        commit('setAuthStatus', false)
       })
   },
 }
