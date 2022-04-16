@@ -21,7 +21,7 @@
   "resolved" "https://registry.npmjs.org/@babel/compat-data/-/compat-data-7.16.4.tgz"
   "version" "7.16.4"
 
-"@babel/core@^7.0.0", "@babel/core@^7.0.0-0", "@babel/core@^7.1.0", "@babel/core@^7.12.0", "@babel/core@^7.12.16", "@babel/core@^7.12.3", "@babel/core@^7.13.0", "@babel/core@^7.4.0-0", "@babel/core@^7.7.2", "@babel/core@^7.7.5", "@babel/core@^7.8.0", "@babel/core@>=7.11.0", "@babel/core@7.x":
+"@babel/core@*", "@babel/core@^7.0.0", "@babel/core@^7.0.0-0", "@babel/core@^7.1.0", "@babel/core@^7.12.0", "@babel/core@^7.12.16", "@babel/core@^7.12.3", "@babel/core@^7.13.0", "@babel/core@^7.4.0-0", "@babel/core@^7.7.2", "@babel/core@^7.7.5", "@babel/core@^7.8.0", "@babel/core@>=7.11.0", "@babel/core@7.x":
   "integrity" "sha512-mYZEvshBRHGsIAiyH5PzCFTCfbWfoYbO/jcSdXQSUQu1/pW0xDZAUP7KEc32heqWTAfAHhV9j1vH8Sav7l+JNQ=="
   "resolved" "https://registry.npmjs.org/@babel/core/-/core-7.16.0.tgz"
   "version" "7.16.0"
@@ -3217,7 +3217,7 @@
   "resolved" "https://registry.npmjs.org/core-js/-/core-js-2.6.12.tgz"
   "version" "2.6.12"
 
-"core-js@^3.19.0", "core-js@^3.8.3":
+"core-js@^3", "core-js@^3.19.0":
   "integrity" "sha512-Tnc7E9iKd/b/ff7GFbhwPVzJzPztGrChB8X8GLqoYGdEOG8IpLnK1xPyo3ZoO3HsK6TodJS58VGPOxA+hLHQMg=="
   "resolved" "https://registry.npmjs.org/core-js/-/core-js-3.19.1.tgz"
   "version" "3.19.1"
@@ -4444,11 +4444,6 @@
   "integrity" "sha1-FQStJSMVjKpA20onh8sBQRmU6k8="
   "resolved" "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   "version" "1.0.0"
-
-"fsevents@^2.3.2", "fsevents@~2.3.2":
-  "integrity" "sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA=="
-  "resolved" "https://registry.npmjs.org/fsevents/-/fsevents-2.3.2.tgz"
-  "version" "2.3.2"
 
 "function-bind@^1.1.1":
   "integrity" "sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A=="
@@ -8421,6 +8416,11 @@
   "integrity" "sha512-WXyP93MscdYFMfwhFFI2kkDxc8UjEPfILn+Isug1u80P9GuZY4tL5rzM/c8ofFQsyxxrAD7L6yeuX114BUykZw=="
   "resolved" "https://registry.npmjs.org/vue-cli-plugin-docker-nginx-diff-proxy/-/vue-cli-plugin-docker-nginx-diff-proxy-1.1.7.tgz"
   "version" "1.1.7"
+
+"vue-cookies@^1.8.0":
+  "integrity" "sha512-5nxAwW4kIS6uP0G9UnWcmSj2NlFpV1wkvAAwGgkWqyPDVCP1IEzFZfg7YUBLiYowZ/cFnxaXqS1nWPIBwfXGRw=="
+  "resolved" "https://registry.npmjs.org/vue-cookies/-/vue-cookies-1.8.0.tgz"
+  "version" "1.8.0"
 
 "vue-eslint-parser@^8.0.1":
   "integrity" "sha512-lhWjDXJhe3UZw2uu3ztX51SJAPGPey1Tff2RK3TyZURwbuI4vximQLzz4nQfCv8CZq4xx7uIiogHMMoSJPr33A=="

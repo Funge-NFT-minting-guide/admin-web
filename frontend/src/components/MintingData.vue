@@ -105,7 +105,7 @@ export default {
   },
   setup(props, context) {
     const reqDataButtonDel = () => {
-      context.emit('requestDataButton', props.tweetId, 'deleted')
+      context.emit('requestDataButton', props.tweetId, 'invalid')
     }
     const reqDataButtonOut = () => {
       context.emit('requestDataButton', props.tweetId, 'outdated')
