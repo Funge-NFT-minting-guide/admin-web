@@ -18,18 +18,23 @@
 <script>
 import { logout } from '@/api/auth'
 import { computed } from 'vue'
-import { useStore } from 'vuex'
+//import { useStore } from 'vuex'
 import avatar from '@/assets/images/avatars/8.jpg'
 export default {
   name: 'AppHeaderDropdownAccnt',
   setup() {
-    const store = useStore()
-    const isAuthenticated = computed(() => store.getters.getAuthStatus)
+    //const store = useStore()
+    //const isAuthenticated = computed(() => store.getters.getAuthStatus)
+    const isAuthenticated = computed(
+      () => self.$cookies.get('isAuthenticated') === 'true',
+    )
 
     const reqLogout = async () => {
       await logout()
       location.reload()
     }
+
+    console.log(`isAuth: ${isAuthenticated.value}`)
 
     return {
       avatar: avatar,

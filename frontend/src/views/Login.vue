@@ -48,7 +48,7 @@
 <script>
 import { ref } from 'vue'
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
+//import { useRouter } from 'vue-router'
 import { login } from '@/api/auth'
 
 export default {
@@ -58,15 +58,16 @@ export default {
     const username = ref()
     const password = ref()
     const store = useStore()
-    const router = useRouter()
+    //const router = useRouter()
 
     const reqLogin = () => {
       let loginInfo = { username: username.value, password: password.value }
       login(loginInfo)
         .then(async (response) => {
           if (response.status === 200) {
-            store.commit('setAuthStatus', true)
-            router.push('/dashboard')
+            store.commit('setAuthStatus', true, { root: true })
+            //router.push('/dashboard')
+            location.href = '/dashboard'
           }
         })
         .catch(() => {

@@ -41,6 +41,20 @@ const routes = [
       },
     ],
   },
+  {
+    path: '/tips',
+    name: 'Tips',
+    component: DefaultLayout,
+    redirect: 'faq',
+    children: [
+      {
+        path: 'faq',
+        name: 'FAQ',
+        component: () =>
+          import(/* webpackChunkName: "faq" */ '@/views/tips/FAQ.vue'),
+      },
+    ],
+  },
 ]
 
 const router = createRouter({

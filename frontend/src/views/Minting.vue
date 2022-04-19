@@ -129,7 +129,7 @@
 </template>
 
 <script>
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, watch, computed } from 'vue'
 import {
   getMintingTweets,
   getMintingDataTotal,
@@ -143,7 +143,6 @@ import {
 export default {
   name: 'Minting',
   setup() {
-    const progressData = [{ title: 'Processing', icon: 'cilCheck', value: 53 }]
     const mintingMap = reactive(new Map())
     const toasts = ref([])
     const totalTweets = ref()
@@ -151,6 +150,12 @@ export default {
     const totalInfo = ref()
     const todayInfo = ref()
     const weekInfo = ref()
+    const progressPercentage = computed(() => {
+      return Math.floor((totalInfo.value / totalData.value) * 100)
+    })
+    const progressData = [
+      { title: 'Processing', icon: 'cilCheck', value: progressPercentage },
+    ]
     const watcher = ref(0)
     let offset = 0
 
@@ -267,6 +272,7 @@ export default {
       totalInfo,
       todayInfo,
       weekInfo,
+      progressPercentage,
     }
   },
 }
