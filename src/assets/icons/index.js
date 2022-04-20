@@ -82,6 +82,7 @@ import {
   cilInfinity,
   cilLinkAlt,
   cilChart,
+  cilVoiceOverRecord,
 } from '@coreui/icons'
 
 export const iconsSet = Object.assign(
@@ -143,6 +144,7 @@ export const iconsSet = Object.assign(
     cilInfinity,
     cilLinkAlt,
     cilChart,
+    cilVoiceOverRecord,
   },
   {
     cifUs,

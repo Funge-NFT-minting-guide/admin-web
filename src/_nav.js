@@ -33,12 +33,6 @@ export default [
         to: '/tips/faq',
         icon: 'cil-infinity',
       },
-      {
-        component: 'CNavItem',
-        name: 'Association',
-        to: '/tips/association',
-        icon: 'cil-link-alt',
-      },
     ],
   },
   {
@@ -52,6 +46,18 @@ export default [
         name: 'Users',
         to: '/accounts/users',
         icon: 'cil-user',
+      },
+      {
+        component: 'CNavItem',
+        name: 'Q&A',
+        to: '/tips/QnA',
+        icon: 'cil-speech',
+      },
+      {
+        component: 'CNavItem',
+        name: 'Association',
+        to: '/tips/association',
+        icon: 'cil-link-alt',
       },
       {
         component: 'CNavItem',

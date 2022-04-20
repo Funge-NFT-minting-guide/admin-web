@@ -48,6 +48,12 @@ const routes = [
     redirect: 'faq',
     children: [
       {
+        path: 'guide',
+        name: 'Guide',
+        component: () =>
+          import(/* webpackChunkName: "guide" */ '@/views/tips/Guide.vue'),
+      },
+      {
         path: 'faq',
         name: 'FAQ',
         component: () =>
