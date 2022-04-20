@@ -30,11 +30,18 @@ minting_info = api.model('MintingInfo', {
     'etc': fields.String(),
     })
 
+faq = api.model('FAQ', {
+    '_id': fields.String(),
+    'question': fields.String(),
+    'answer': fields.String(),
+    })
+
 parser = reqparse.RequestParser()
 parser.add_argument('filter', type=str, choices=('_id', 'tweetId'))
 parser.add_argument('query', type=str, default='{}')
 parser.add_argument('startdate', type=str)
 parser.add_argument('enddate', type=str)
+parser.add_argument('offset', type=int)
 
 db = DAO('funge-admin')
 
@@ -92,6 +99,35 @@ class MintingInfoToday(Resource):
         ret = db.count('mintingInfo', {'date': {'$gte': datetime.datetime.strptime(args['startdate'], '%Y-%m-%d'), '$lt': datetime.datetime.strptime(args['enddate'], '%Y-%m-%d')}})
         return ret
 
+
+@api.route('/tips/faq')
+class FAQ(Resource):
+    @api.marshal_list_with(faq)
+    def get(self):
+        args = parser.parse_args()
+        ret = list(db.find('faq', {}).skip(args['offset']))
+        return ret
+
+    def post(self):
+        faq = json.loads(request.get_data())
+
+        ret = db.insert_one('faq', {'question': faq['question'], 'answer': faq['answer']})
+        return SUC_CREATED if ret.acknowledged else abort(500, 'Something is wrong.')
+
+    @api.marshal_with(faq)
+    def put(self):
+        faq = json.loads(request.get_data())
+
+        ret = db.find_one_and_update('faq', {'_id': ObjectId(faq['_id'])}, {'$set': {'question': faq['question'], 'answer': faq['answer']}})
+        return ret
+
+
+@api.route('/tips/faq/<string:_id>')
+class DeleteFAQ(Resource):
+    def delete(self, _id):
+        ret = db.delete_one('faq', {'_id': ObjectId(_id)})
+
+        return SUC_DELETED if ret.acknowledged else abort(500, 'Something is wrong.')
 
 
 if __name__ == '__main__':

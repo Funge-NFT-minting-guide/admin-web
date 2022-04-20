@@ -32,3 +32,7 @@ class DAO:
 
     def count(self, collection, query):
         return self.mongo[collection].count_documents(filter=query)
+
+    def delete_one(self, collection, query):
+        return self.mongo[collection].delete_one(query)
+
